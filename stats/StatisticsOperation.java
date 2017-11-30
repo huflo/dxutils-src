@@ -268,38 +268,40 @@ public final class StatisticsOperation {
      *         if the file could not be opened.
      */
     void writeToFile(final String p_path) throws IOException {
-        FileWriter fw = new FileWriter(p_path + m_recorderName + '_' + m_name + ".csv", true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        PrintWriter out = new PrintWriter(bw);
+        if (m_numberOfStats.get() > 0) {
+            FileWriter fw = new FileWriter(p_path + m_recorderName + '_' + m_name + ".csv", true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter out = new PrintWriter(bw);
 
-        String line;
-        Stats stats;
-        for (int i = 0; i < m_statsMapBlockPos; i++) {
-            for (int j = 0; j < ms_blockSizeStatsMap; j++) {
-                stats = m_statsMap[i][j];
-                if (stats != null) {
-                    String threadName = String.valueOf(stats.m_threadID);
-                    if (stats.m_threadName.contains("MessageHandler")) {
-                        threadName = "Handler(" + stats.m_threadID + ')';
-                    } else if (stats.m_threadName.contains("MessageCreationCoordinator")) {
-                        threadName = "MCC(" + stats.m_threadID + ')';
-                    }
+            String line;
+            Stats stats;
+            for (int i = 0; i < m_statsMapBlockPos; i++) {
+                for (int j = 0; j < ms_blockSizeStatsMap; j++) {
+                    stats = m_statsMap[i][j];
+                    if (stats != null) {
+                        String threadName = String.valueOf(stats.m_threadID);
+                        if (stats.m_threadName.contains("MessageHandler")) {
+                            threadName = "Handler(" + stats.m_threadID + ')';
+                        } else if (stats.m_threadName.contains("MessageCreationCoordinator")) {
+                            threadName = "MCC(" + stats.m_threadID + ')';
+                        }
 
-                    line = String.format("%s-%s %s\t%s\t%d\t%.1f\t%d\t%d\t%d\t%d\t%.4f", m_recorderName, m_name, threadName, stats.m_threadName,
-                            stats.getOpCount(), stats.getOpsPerSecond(), stats.getAverageTimeNs(), stats.getShortestTimeNs(), stats.getLongestTimeNs(),
-                            stats.getCounter(), stats.getCounter2());
-                    if (stats instanceof StatsPercentile) {
-                        ((StatsPercentile) stats).sortValues();
-                        line = String.format("%s\t%d\t%d\t%d", line, ((StatsPercentile) stats).getPercentile(0.95f),
-                                ((StatsPercentile) stats).getPercentile(0.99f), ((StatsPercentile) stats).getPercentile(0.999f));
+                        line = String.format("%s-%s %s\t%s\t%d\t%.1f\t%d\t%d\t%d\t%d\t%.4f", m_recorderName, m_name, threadName, stats.m_threadName,
+                                stats.getOpCount(), stats.getOpsPerSecond(), stats.getAverageTimeNs(), stats.getShortestTimeNs(), stats.getLongestTimeNs(),
+                                stats.getCounter(), stats.getCounter2());
+                        if (stats instanceof StatsPercentile) {
+                            ((StatsPercentile) stats).sortValues();
+                            line = String.format("%s\t%d\t%d\t%d", line, ((StatsPercentile) stats).getPercentile(0.95f),
+                                    ((StatsPercentile) stats).getPercentile(0.99f), ((StatsPercentile) stats).getPercentile(0.999f));
+                        }
+                        out.println(line);
                     }
-                    out.println(line);
                 }
             }
+            out.close();
+            bw.close();
+            fw.close();
         }
-        out.close();
-        bw.close();
-        fw.close();
     }
 
     @Override

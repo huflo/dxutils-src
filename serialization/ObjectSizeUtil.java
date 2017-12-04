@@ -13,6 +13,8 @@
 
 package de.hhu.bsinfo.dxutils.serialization;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Utility class for implementing the sizeofObject call of the ObjectSize interface
  *
@@ -97,6 +99,6 @@ public final class ObjectSizeUtil {
      * @return Serialization size
      */
     public static int sizeofString(final String p_str) {
-        return sizeofByteArray(p_str.getBytes());
+        return sizeofByteArray(p_str.getBytes(StandardCharsets.US_ASCII));
     }
 }

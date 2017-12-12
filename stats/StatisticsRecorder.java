@@ -13,7 +13,12 @@
 
 package de.hhu.bsinfo.dxutils.stats;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -74,15 +79,29 @@ public class StatisticsRecorder {
     }
 
     /**
-     * Write StatisticsOperations to files.
+     * Write StatisticsOperations formatted as table to stdout
+     */
+    void writeStatisticsTablesToStdout() {
+        for (StatisticsOperation op : m_operations.values()) {
+            op.writeTable(System.out);
+        }
+    }
+
+    /**
+     * Write StatisticsOperations formatted as table to file
      *
      * @param p_path
      *         the folder to write into.
      */
-    void writeStatisticsToFile(final String p_path) {
+    void writeStatisticsTablesToFile(final String p_path) {
         try {
             for (StatisticsOperation op : m_operations.values()) {
-                op.writeToFile(p_path);
+                PrintStream stream = new PrintStream(new FileOutputStream(
+                    p_path + m_recorderName + '_' + op.getName() + ".csv", true));
+
+                op.writeTable(stream);
+
+                stream.close();
             }
         } catch (IOException e) {
             e.printStackTrace();

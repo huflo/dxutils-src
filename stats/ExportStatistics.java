@@ -37,12 +37,12 @@ public final class ExportStatistics {
     }
 
     /**
-     * Print the statistics to files.
+     * Print the statistics as tables to files.
      *
      * @param p_path
-     *         The folder to write into.
+     *         The folder to write to.
      */
-    public static void writeStatisticsToFile(final String p_path) {
+    public static void writeStatisticsTablesToFiles(final String p_path) {
         // #if LOGGER >= INFO
         LOGGER.info("Writing statistics to files...");
         // #endif /* LOGGER >= INFO */
@@ -72,7 +72,21 @@ public final class ExportStatistics {
 
         Collection<StatisticsRecorder> recorders = Statistics.getRecorders();
         for (StatisticsRecorder recorder : recorders) {
-            recorder.writeStatisticsToFile(p_path);
+            recorder.writeStatisticsTablesToFile(p_path);
+        }
+    }
+
+    /**
+     * Print the statistics as tables to stdout
+     */
+    public static void writeStatisticsTablesToStdout() {
+        // #if LOGGER >= INFO
+        LOGGER.info("Writing statistics to stdout...");
+        // #endif /* LOGGER >= INFO */
+
+        Collection<StatisticsRecorder> recorders = Statistics.getRecorders();
+        for (StatisticsRecorder recorder : recorders) {
+            recorder.writeStatisticsTablesToStdout();
         }
     }
 }

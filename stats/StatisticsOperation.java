@@ -16,6 +16,7 @@ package de.hhu.bsinfo.dxutils.stats;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -262,17 +263,11 @@ public final class StatisticsOperation {
     /**
      * Write stats to files.
      *
-     * @param p_path
-     *         the folder to write into.
-     * @throws IOException
-     *         if the file could not be opened.
+     * @param p_outputStream
+     *         Output stream to write to
      */
-    void writeToFile(final String p_path) throws IOException {
+    void writeTable(final PrintStream p_outputStream) {
         if (m_numberOfStats.get() > 0) {
-            FileWriter fw = new FileWriter(p_path + m_recorderName + '_' + m_name + ".csv", true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw);
-
             String line;
             Stats stats;
             for (int i = 0; i < m_statsMapBlockPos; i++) {
@@ -286,21 +281,20 @@ public final class StatisticsOperation {
                             threadName = "MCC(" + stats.m_threadID + ')';
                         }
 
-                        line = String.format("%s-%s %s\t%s\t%d\t%.1f\t%d\t%d\t%d\t%d\t%.4f", m_recorderName, m_name, threadName, stats.m_threadName,
+                        line = String.format("%s-%s %s;%s;%d;%.1f;%d;%d;%d;%d;%.4f", m_recorderName, m_name, threadName, stats.m_threadName,
                                 stats.getOpCount(), stats.getOpsPerSecond(), stats.getAverageTimeNs(), stats.getShortestTimeNs(), stats.getLongestTimeNs(),
                                 stats.getCounter(), stats.getCounter2());
+
                         if (stats instanceof StatsPercentile) {
                             ((StatsPercentile) stats).sortValues();
-                            line = String.format("%s\t%d\t%d\t%d", line, ((StatsPercentile) stats).getPercentile(0.95f),
+                            line = String.format("%s;%d;%d;%d", line, ((StatsPercentile) stats).getPercentile(0.95f),
                                     ((StatsPercentile) stats).getPercentile(0.99f), ((StatsPercentile) stats).getPercentile(0.999f));
                         }
-                        out.println(line);
+
+                        p_outputStream.println(line);
                     }
                 }
             }
-            out.close();
-            bw.close();
-            fw.close();
         }
     }
 

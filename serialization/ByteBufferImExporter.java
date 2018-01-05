@@ -137,15 +137,17 @@ public class ByteBufferImExporter implements Importer, Exporter {
 
     @Override
     public int readCompactNumber(int p_int) {
+        int ret = 0;
         int i;
         for (i = 0; i < Integer.BYTES; i++) {
             byte b = readByte((byte) 0);
+            ret += (b & 0x7F) << i * 7;
             if ((b & 0x80) == 0) {
                 break;
             }
         }
 
-        return CompactNumber.decompact(m_byteBuffer.array(), m_byteBuffer.position() - i, i);
+        return ret;
     }
 
     @Override

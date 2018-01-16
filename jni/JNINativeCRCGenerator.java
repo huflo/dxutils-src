@@ -14,13 +14,12 @@
 package de.hhu.bsinfo.dxutils.jni;
 
 /**
- *
  * @author Kevin Beineke, kevin.beineke@hhu.de, 06.03.2017
  */
 public final class JNINativeCRCGenerator {
 
     /**
-     * Static class, private constuctor.
+     * Static class, private constructor.
      */
     private JNINativeCRCGenerator() {
     }
@@ -29,13 +28,13 @@ public final class JNINativeCRCGenerator {
      * Update CRC32 checksum.
      *
      * @param p_checksum
-     *     the current checksum, 0 if all data is given at once.
+     *         the current checksum, 0 if all data is given at once.
      * @param p_data
-     *     the byte array with data to hash.
+     *         the byte array with data to hash.
      * @param p_offset
-     *     the offset within given array.
+     *         the offset within given array.
      * @param p_length
-     *     the length of the data to hash.
+     *         the length of the data to hash.
      * @return the CRC32C checksum.
      */
     public static native int hash(final int p_checksum, final byte[] p_data, final int p_offset, final int p_length);

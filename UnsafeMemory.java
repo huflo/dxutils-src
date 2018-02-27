@@ -72,6 +72,20 @@ public final class UnsafeMemory {
     }
 
     /**
+     * Read data from one native memory address to another native memory address.
+     *
+     * @param p_address1
+     *         Source address in memory.
+     * @param p_address2
+     *         Destination address in memory.
+     * @param p_length
+     *         Number of bytes to read from specified start.
+     */
+    public static void copyBytes(final long p_address1, final long p_address2, final int p_length) {
+        ms_unsafeHandler.getUnsafe().copyMemory(null, p_address1, null, p_address2, p_length);
+    }
+
+    /**
      * Read data from memory into a byte array.
      *
      * @param p_ptr

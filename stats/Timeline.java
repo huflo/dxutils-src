@@ -84,13 +84,21 @@ public class Timeline extends AbstractOperation {
     public String dataToString(final String p_indent) {
         StringBuilder builder = new StringBuilder();
 
+        long totalTime = 0;
+
+        for (int i = 0; i < m_times.length; i++) {
+            totalTime += m_times[i].getTotalTime();
+        }
+
         for (int i = 0; i < m_times.length; i++) {
             builder.append(p_indent);
             builder.append('(');
             builder.append(i);
             builder.append(") ");
             builder.append(m_times[i].getOperationNameSimple());
-            builder.append(": ");
+            builder.append(": dist ");
+            builder.append(String.format("%.2f", (double) m_times[i].getTotalTime() / totalTime * 100));
+            builder.append(" %;");
             builder.append(m_times[i].dataToString(""));
 
             if (i + 1 < m_times.length) {
@@ -103,15 +111,23 @@ public class Timeline extends AbstractOperation {
 
     @Override
     public String generateCSVHeader(final char p_delim) {
-        return "section" + p_delim + new Time(m_class, m_name).generateCSVHeader(p_delim);
+        return "section" + p_delim + "dist" + p_delim + new Time(m_class, m_name).generateCSVHeader(p_delim);
     }
 
     @Override
     public String toCSV(final char p_delim) {
         StringBuilder builder = new StringBuilder();
 
+        long totalTime = 0;
+
+        for (int i = 0; i < m_times.length; i++) {
+            totalTime += m_times[i].getTotalTime();
+        }
+
         for (int i = 0; i < m_times.length; i++) {
             builder.append(m_times[i].getOperationNameSimple());
+            builder.append(p_delim);
+            builder.append(String.format("%.2f", (double) m_times[i].getTotalTime() / totalTime * 100));
             builder.append(p_delim);
             builder.append(m_times[i].toCSV(p_delim));
 

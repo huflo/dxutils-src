@@ -104,7 +104,7 @@ public class Time extends AbstractOperation {
      *
      * @return Total time in ns
      */
-    public double getTotalTime() {
+    public long getTotalTime() {
         return m_total;
     }
 

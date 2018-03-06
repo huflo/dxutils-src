@@ -74,7 +74,12 @@ public class Time extends AbstractOperation {
      * Stop time measurement
      */
     public void stop() {
+        if (m_start == 0) {
+            return;
+        }
+
         long delta = PerfTimer.convertToNs(PerfTimer.considerOverheadForDelta(PerfTimer.endWeak() - m_start));
+        m_start = 0;
 
         m_total += delta;
 

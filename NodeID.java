@@ -36,20 +36,32 @@ public final class NodeID {
      * Convert a node id to a proper string representation in hex.
      *
      * @param p_nodeId
-     *     Node id to convert.
+     *         Node id to convert.
      * @return Hex string of node id, example: 0x1111
      */
     public static String toHexString(final short p_nodeId) {
         int tmp = p_nodeId & 0xFFFF;
-        // return "0x" + Integer.toHexString(tmp).toUpperCase();
         return "0x" + String.format("%04x", tmp).toUpperCase();
+    }
+
+    /**
+     * Convert a node id to a proper string representation in hex.
+     * Same as toHexString but without the prefix 0x
+     *
+     * @param p_nodeId
+     *         Node id to convert.
+     * @return Hex string of node id, example: AA11
+     */
+    public static String toHexStringShort(final short p_nodeId) {
+        int tmp = p_nodeId & 0xFFFF;
+        return String.format("%04x", tmp).toUpperCase();
     }
 
     /**
      * Parse a hex string containing a node id.
      *
      * @param p_str
-     *     Hex string with node id, e.g. either 0x1234 or 1234
+     *         Hex string with node id, e.g. either 0x1234 or 1234
      * @return Parsed node id
      */
     public static short parse(final String p_str) {
@@ -66,7 +78,7 @@ public final class NodeID {
      * Method to convert a list of node IDs to a list of hex strings
      *
      * @param p_nodeIDs
-     *     Node IDs
+     *         Node IDs
      * @return String with list of node IDs in hex
      */
     public static String nodeIDArrayToString(final short[] p_nodeIDs) {

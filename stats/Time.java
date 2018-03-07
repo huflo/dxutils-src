@@ -209,12 +209,12 @@ public class Time extends AbstractOperation {
      * @return String with auto formated time
      */
     String formatTime(final double p_timeNs) {
-        for (int i = Prefix.SEC.ordinal(); i >= Prefix.NANO.ordinal(); i--) {
-            if (p_timeNs > MS_PREFIX_TABLE[i]) {
-                return p_timeNs / MS_PREFIX_TABLE[i] + " " + MS_PREFIX_NAMES[i];
+        for (int i = Prefix.MICRO.ordinal(); i <= Prefix.SEC.ordinal(); i++) {
+            if (p_timeNs < MS_PREFIX_TABLE[i]) {
+                return p_timeNs / MS_PREFIX_TABLE[i - 1] + " " + MS_PREFIX_NAMES[i - 1];
             }
         }
 
-        return p_timeNs + " " + MS_PREFIX_NAMES[0];
+        return p_timeNs / MS_PREFIX_TABLE[Prefix.SEC.ordinal()] + " " + MS_PREFIX_NAMES[Prefix.SEC.ordinal()];
     }
 }

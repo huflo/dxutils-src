@@ -257,7 +257,8 @@ public class Value extends AbstractOperation {
     String formatValue(final double p_value) {
         for (int i = 1; i < Prefix.COUNT.ordinal(); i++) {
             if (p_value < MS_PREFIX_TABLE[m_base.ordinal()][i]) {
-                return p_value / MS_PREFIX_TABLE[m_base.ordinal()][i - 1] + " " + MS_PREFIX_NAMES[i - 1];
+                return String.format("%.3f %s", p_value / MS_PREFIX_TABLE[m_base.ordinal()][i - 1],
+                        MS_PREFIX_NAMES[i - 1]);
             }
         }
 

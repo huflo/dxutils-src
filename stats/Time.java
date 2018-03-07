@@ -211,10 +211,11 @@ public class Time extends AbstractOperation {
     String formatTime(final double p_timeNs) {
         for (int i = Prefix.MICRO.ordinal(); i <= Prefix.SEC.ordinal(); i++) {
             if (p_timeNs < MS_PREFIX_TABLE[i]) {
-                return p_timeNs / MS_PREFIX_TABLE[i - 1] + " " + MS_PREFIX_NAMES[i - 1];
+                return String.format("%.3f %s", p_timeNs / MS_PREFIX_TABLE[i - 1], MS_PREFIX_NAMES[i - 1]);
             }
         }
 
-        return p_timeNs / MS_PREFIX_TABLE[Prefix.SEC.ordinal()] + " " + MS_PREFIX_NAMES[Prefix.SEC.ordinal()];
+        return String.format("%.3f %s", p_timeNs / MS_PREFIX_TABLE[Prefix.SEC.ordinal()],
+                MS_PREFIX_NAMES[Prefix.SEC.ordinal()]);
     }
 }

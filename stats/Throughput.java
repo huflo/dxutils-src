@@ -170,8 +170,9 @@ public class Throughput extends AbstractOperation {
     private String formatValue() {
         for (int i = 1; i < Value.Prefix.COUNT.ordinal(); i++) {
             if (m_value.getTotalValue() < Value.MS_PREFIX_TABLE[m_value.getBase().ordinal()][i]) {
-                return m_value.getTotalValue(Value.Prefix.values()[i]) / m_time.getTotalTime(Time.Prefix.SEC) + " " +
-                        MS_PREFIX_NAMES[i - 1];
+                return String.format("%.3f %s",
+                        m_value.getTotalValue(Value.Prefix.values()[i]) / m_time.getTotalTime(Time.Prefix.SEC),
+                        MS_PREFIX_NAMES[i - 1]);
             }
         }
 

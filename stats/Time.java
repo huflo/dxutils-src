@@ -29,7 +29,7 @@ public class Time extends AbstractOperation {
     }
 
     static {
-        PerfTimer.init();
+        PerfTimer.init(PerfTimer.Type.SYSTEM_NANO_TIME);
     }
 
     private static final double[] MS_PREFIX_TABLE = {

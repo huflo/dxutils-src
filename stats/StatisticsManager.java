@@ -154,7 +154,8 @@ public final class StatisticsManager extends Thread {
     public void printStatistics(final PrintStream p_stream, final boolean p_extended) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("================= Statistics =================\n");
+        builder.append("\n================================================= Statistics ============================" +
+                "=====================\n");
 
         m_opsLock.lock();
 
@@ -182,6 +183,9 @@ public final class StatisticsManager extends Thread {
 
         m_opsLock.unlock();
 
+        builder.append("============================================================================================" +
+                "==================\n");
+
         p_stream.print(builder);
     }
 
@@ -194,7 +198,8 @@ public final class StatisticsManager extends Thread {
     public void printStatisticTables(final PrintStream p_stream) {
         StringBuilder builder = new StringBuilder();
 
-        builder.append("================= Statistics (CSV) =================\n");
+        builder.append("\n================================================= Statistics (CSV) ========================" +
+                "=========================\n");
 
         m_opsLock.lock();
 
@@ -223,6 +228,9 @@ public final class StatisticsManager extends Thread {
         builder.append('\n');
 
         m_opsLock.unlock();
+
+        builder.append("============================================================================================" +
+                "==================\n");
 
         p_stream.print(builder);
     }

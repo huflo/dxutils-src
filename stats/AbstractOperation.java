@@ -59,7 +59,12 @@ public abstract class AbstractOperation implements CsvPrinter {
      *
      * @param p_indent
      *         Indent to add as "prefix"
+     * @param p_extended
+     *         Set to true to tell the manager to print statistics that also
+     *         require some processing/pre-calculation (e.g. percentile). The dedicated
+     *         statistics thread will set this to false to avoid executing these expensive
+     *         calculations during runtime.
      * @return Data as string
      */
-    public abstract String dataToString(final String p_indent);
+    public abstract String dataToString(final String p_indent, final boolean p_extended);
 }

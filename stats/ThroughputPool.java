@@ -95,7 +95,7 @@ public class ThroughputPool extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         // TODO limit if more than e.g. 10 threads -> parameter
 
         StringBuilder builder = new StringBuilder();
@@ -109,7 +109,7 @@ public class ThroughputPool extends AbstractOperation {
                     builder.append("id ");
                     builder.append((i + 1) * j);
                     builder.append(": ");
-                    builder.append(m_pool[i][j].dataToString(""));
+                    builder.append(m_pool[i][j].dataToString("", p_extended));
 
                     if (--entries > 0) {
                         builder.append('\n');
@@ -122,12 +122,12 @@ public class ThroughputPool extends AbstractOperation {
     }
 
     @Override
-    public String generateCSVHeader(char p_delim) {
+    public String generateCSVHeader(final char p_delim) {
         return new Throughput(m_class, "dummy", m_base).generateCSVHeader(p_delim);
     }
 
     @Override
-    public String toCSV(char p_delim) {
+    public String toCSV(final char p_delim) {
         StringBuilder builder = new StringBuilder();
 
         int entries = m_numberEntries.get();

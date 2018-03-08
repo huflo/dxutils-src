@@ -92,7 +92,7 @@ public class Ratio extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         return p_indent + "counter_ratio " + getRatioCounter() + ";total_ratio " + getRatioTotalValue() +
                 ";min_ratio " + getRatioMinValue() + ";max_ratio " + getRatioMaxValue();
     }

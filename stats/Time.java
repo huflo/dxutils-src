@@ -32,7 +32,7 @@ public class Time extends AbstractOperation {
         PerfTimer.init(PerfTimer.Type.SYSTEM_NANO_TIME);
     }
 
-    private static final double[] MS_PREFIX_TABLE = {
+    static final double[] MS_PREFIX_TABLE = {
             1.0,
             1000.0,
             1000.0 * 1000.0,
@@ -72,10 +72,12 @@ public class Time extends AbstractOperation {
 
     /**
      * Stop time measurement
+     *
+     * @return Meausred delta time in ns
      */
-    public void stop() {
+    public long stop() {
         if (m_start == 0) {
-            return;
+            return 0;
         }
 
         long delta = PerfTimer.convertToNs(PerfTimer.considerOverheadForDelta(PerfTimer.endWeak() - m_start));
@@ -90,6 +92,8 @@ public class Time extends AbstractOperation {
         if (delta > m_worst) {
             m_worst = delta;
         }
+
+        return delta;
     }
 
     /**
@@ -184,7 +188,7 @@ public class Time extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         return p_indent + "counter " + m_counter + ";total " + formatTime(m_total) + ";avg " + formatTime(
                 getAvgTime(Prefix.NANO)) + ";best " + formatTime(m_best) + ";worst " + formatTime(m_worst);
     }
@@ -197,8 +201,8 @@ public class Time extends AbstractOperation {
 
     @Override
     public String toCSV(final char p_delim) {
-        return getOperationName() + p_delim + m_counter + p_delim + formatTime(m_total) + p_delim + formatTime(
-                getAvgTime(Prefix.NANO)) + p_delim + formatTime(m_best) + p_delim + formatTime(m_worst);
+        return getOperationName() + p_delim + m_counter + p_delim + m_total + p_delim + getAvgTime(Prefix.NANO) +
+                p_delim + m_best + p_delim + m_worst;
     }
 
     /**

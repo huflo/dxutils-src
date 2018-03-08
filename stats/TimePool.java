@@ -60,7 +60,7 @@ public class TimePool extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         // TODO limit if more than e.g. 10 threads -> parameter
 
         StringBuilder builder = new StringBuilder();
@@ -74,7 +74,7 @@ public class TimePool extends AbstractOperation {
                     builder.append("id ");
                     builder.append((i + 1) * j);
                     builder.append(": ");
-                    builder.append(m_pool[i][j].dataToString(""));
+                    builder.append(m_pool[i][j].dataToString("", p_extended));
 
                     if (--entries > 0) {
                         builder.append('\n');

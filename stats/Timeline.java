@@ -81,7 +81,7 @@ public class Timeline extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         StringBuilder builder = new StringBuilder();
 
         long totalTime = 0;
@@ -99,7 +99,7 @@ public class Timeline extends AbstractOperation {
             builder.append(": dist ");
             builder.append(String.format("%.2f", (double) m_times[i].getTotalTime() / totalTime * 100));
             builder.append(" %;");
-            builder.append(m_times[i].dataToString(""));
+            builder.append(m_times[i].dataToString("", p_extended));
 
             if (i + 1 < m_times.length) {
                 builder.append('\n');

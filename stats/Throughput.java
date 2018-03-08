@@ -142,7 +142,7 @@ public class Throughput extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         return p_indent + formatValue() + ";value counter " + m_value.getCounter() + ";total " + m_value.formatValue(
                 m_value.getTotalValue()) + ";avg " + m_value.formatValue(m_value.getAvgValue()) +
                 ";min " + m_value.formatValue(m_value.getMinValue()) + ";max " + m_value.formatValue(

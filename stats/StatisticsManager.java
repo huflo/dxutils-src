@@ -139,6 +139,19 @@ public final class StatisticsManager extends Thread {
      *         Stream to print to (e.g. System.out)
      */
     public void printStatistics(final PrintStream p_stream) {
+        printStatistics(p_stream, false);
+    }
+
+    /**
+     * Print all registered statistics operations to a stream
+     *
+     * @param p_stream
+     *         Stream to print to (e.g. System.out)
+     * @param p_extended
+     *         Set to true to tell the manager to print statistics that also
+     *         require some processing/pre-calculation (e.g. percentile).
+     */
+    public void printStatistics(final PrintStream p_stream, final boolean p_extended) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("================= Statistics =================\n");
@@ -155,7 +168,7 @@ public final class StatisticsManager extends Thread {
                 builder.append(": ");
                 builder.append('\n');
 
-                String data = op.dataToString("    ");
+                String data = op.dataToString("    ", p_extended);
 
                 if (data.isEmpty()) {
                     builder.append("    **** None ****");

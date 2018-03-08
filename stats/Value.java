@@ -230,10 +230,9 @@ public class Value extends AbstractOperation {
     }
 
     @Override
-    public String dataToString(final String p_indent) {
+    public String dataToString(final String p_indent, final boolean p_extended) {
         return p_indent + "counter " + m_counter + ";total " + formatValue(m_total) + ";avg " + formatValue(
-                getAvgValue()) +
-                ";min " + formatValue(m_min) + ";max " + formatValue(m_max);
+                getAvgValue()) + ";min " + formatValue(m_min) + ";max " + formatValue(m_max);
     }
 
     @Override

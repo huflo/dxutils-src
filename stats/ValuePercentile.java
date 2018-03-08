@@ -41,7 +41,6 @@ public class ValuePercentile extends AbstractOperation {
     public ValuePercentile(final Class<?> p_class, final String p_name) {
         super(p_class, p_name);
 
-        m_slots.add(new long[SLOT_SIZE]);
         m_index = 0;
     }
 
@@ -50,6 +49,10 @@ public class ValuePercentile extends AbstractOperation {
      * to update the internal state.
      */
     public void sortValues() {
+        if (m_index == 0) {
+            return;
+        }
+
         quickSort(0, (m_slots.size() - 1) * SLOT_SIZE + m_index - 1);
     }
 
@@ -63,6 +66,10 @@ public class ValuePercentile extends AbstractOperation {
     public long getPercentileScore(final float p_percentile) {
         if (p_percentile <= 0.0 || p_percentile >= 1.0) {
             throw new IllegalArgumentException("Percentile must be in (0.0, 1.0)!");
+        }
+
+        if (m_index == 0) {
+            return 0;
         }
 
         int size = (m_slots.size() - 1) * SLOT_SIZE + m_index;

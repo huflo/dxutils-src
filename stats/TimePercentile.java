@@ -16,8 +16,6 @@
 
 package de.hhu.bsinfo.dxutils.stats;
 
-import java.util.ArrayList;
-
 /**
  * Statistics operation to measure time which stores the full time history
  * to determine percentiles
@@ -25,10 +23,7 @@ import java.util.ArrayList;
  * @author Stefan Nothaas, stefan.nothaas@hhu.de, 08.03.2018
  */
 public class TimePercentile extends Time {
-    private static final int SLOT_SIZE = 100000;
-
-    private ArrayList<long[]> m_slots = new ArrayList<>();
-    private int m_index;
+    private ValuePercentile m_percentile;
 
     /**
      * Constructor
@@ -41,8 +36,7 @@ public class TimePercentile extends Time {
     public TimePercentile(final Class<?> p_class, final String p_name) {
         super(p_class, p_name);
 
-        m_slots.add(new long[SLOT_SIZE]);
-        m_index = 0;
+        m_percentile = new ValuePercentile(p_class, p_name);
     }
 
     /**
@@ -50,7 +44,7 @@ public class TimePercentile extends Time {
      * to update the internal state.
      */
     public void sortValues() {
-        quickSort(0, (m_slots.size() - 1) * SLOT_SIZE + m_index - 1);
+        m_percentile.sortValues();
     }
 
     /**
@@ -61,14 +55,7 @@ public class TimePercentile extends Time {
      * @return Score of specified percentile
      */
     public long getPercentileScore(final float p_percentile) {
-        if (p_percentile <= 0.0 || p_percentile >= 1.0) {
-            throw new IllegalArgumentException("Percentile must be in (0.0, 1.0)!");
-        }
-
-        int size = (m_slots.size() - 1) * SLOT_SIZE + m_index;
-        int index = (int) Math.ceil(p_percentile * size) - 1;
-
-        return m_slots.get(index / SLOT_SIZE)[index % SLOT_SIZE];
+        return m_percentile.getPercentileScore(p_percentile);
     }
 
     /**
@@ -84,19 +71,21 @@ public class TimePercentile extends Time {
         return getPercentileScore(p_percentile) / MS_PREFIX_TABLE[p_prefix.ordinal()];
     }
 
+    /**
+     * Record a single value
+     *
+     * @param p_valueNs
+     *         Time value in ns to record (separate from start/stop)
+     */
+    public void record(final long p_valueNs) {
+        m_percentile.record(p_valueNs);
+    }
+
     @Override
     public long stop() {
         long delta = super.stop();
 
-        long[] arr = m_slots.get(m_slots.size() - 1);
-
-        if (m_index == SLOT_SIZE) {
-            arr = new long[SLOT_SIZE];
-            m_slots.add(arr);
-            m_index = 0;
-        }
-
-        arr[m_index++] = delta;
+        record(delta);
 
         return delta;
     }
@@ -127,58 +116,5 @@ public class TimePercentile extends Time {
         sortValues();
         return super.toCSV(p_delim) + p_delim + getPercentileScore(0.95f) + p_delim + getPercentileScore(0.99f) +
                 p_delim + getPercentileScore(0.999f);
-    }
-
-    /**
-     * Quicksort implementation.
-     *
-     * @param p_lowerIndex
-     *         the lower index
-     * @param p_higherIndex
-     *         the higher index
-     */
-    private void quickSort(int p_lowerIndex, int p_higherIndex) {
-        int i = p_lowerIndex;
-        int j = p_higherIndex;
-        int index = p_lowerIndex + (p_higherIndex - p_lowerIndex) / 2;
-        long pivot = m_slots.get(index / SLOT_SIZE)[index % SLOT_SIZE];
-
-        while (i <= j) {
-            while (m_slots.get(i / SLOT_SIZE)[i % SLOT_SIZE] < pivot) {
-                i++;
-            }
-
-            while (m_slots.get(j / SLOT_SIZE)[j % SLOT_SIZE] > pivot) {
-                j--;
-            }
-
-            if (i <= j) {
-                exchangeNumbers(i, j);
-                i++;
-                j--;
-            }
-        }
-
-        if (p_lowerIndex < j) {
-            quickSort(p_lowerIndex, j);
-        }
-
-        if (i < p_higherIndex) {
-            quickSort(i, p_higherIndex);
-        }
-    }
-
-    /**
-     * Helper method for quicksort. Exchange two values.
-     *
-     * @param p_i
-     *         first index
-     * @param p_j
-     *         second index
-     */
-    private void exchangeNumbers(int p_i, int p_j) {
-        long temp = m_slots.get(p_i / SLOT_SIZE)[p_i % SLOT_SIZE];
-        m_slots.get(p_i / SLOT_SIZE)[p_i % SLOT_SIZE] = m_slots.get(p_j / SLOT_SIZE)[p_j % SLOT_SIZE];
-        m_slots.get(p_j / SLOT_SIZE)[p_j % SLOT_SIZE] = temp;
     }
 }

@@ -24,7 +24,7 @@ public final class MeasurementHelper {
     private final String basePath;
     private static boolean collectMiss = false;
 
-    private static long round = 1;
+    private long round = 1;
 
     /**
      * Constructor
@@ -48,10 +48,7 @@ public final class MeasurementHelper {
             fc.write(ByteBuffer.wrap(p_descLine.getBytes()));
             fc.close();
 
-        } catch (IOException e) {
-            System.err.println(e.getMessage() + "\nexit...");
-            System.exit(255);
-        }
+        } catch (IOException ignored) {}
 
         collectMiss = p_collectMiss;
 
@@ -101,7 +98,7 @@ public final class MeasurementHelper {
             fc.write(ByteBuffer.wrap(measurements[0].csvHeader(delim).getBytes()));
         } else {
             fc = FileChannel.open(Paths.get(basePath + "_" + fileExtension + ".log"),
-                    StandardOpenOption.WRITE, StandardOpenOption.APPEND);
+                    StandardOpenOption.APPEND, StandardOpenOption.WRITE);
         }
 
         fc.write(ByteBuffer.wrap((getCSVStats(round, delim)).getBytes()));
@@ -118,11 +115,17 @@ public final class MeasurementHelper {
      */
     private String getCSVStats(final long round, final char delim) {
         StringBuilder out = new StringBuilder();
+        String tmp;
 
         for (Measurement m:measurements){
-            out.append(round).append("_").append(m.getExecutedSuccessfullyStats(delim));
-            if (collectMiss)
-                out.append(round).append("_").append((m.getNotExecutedSuccessfullyStats(delim)));
+            tmp = m.getExecutedSuccessfullyStats(delim);
+            if(!tmp.isEmpty())
+                out.append(round).append(delim).append(tmp);
+            if (collectMiss){
+                tmp = m.getNotExecutedSuccessfullyStats(delim);
+                if(!tmp.isEmpty())
+                    out.append(round).append(delim).append(tmp);
+            }
         }
 
         return out.toString();
@@ -295,7 +298,7 @@ public final class MeasurementHelper {
          *          A header for the CSV file
          */
         private String csvHeader(final char delim){
-            return "name" + delim + "operation" + delim + "best" + delim + "worst" + delim + "average"
+            return "round" + delim +"name" + delim + "operation" + delim + "best" + delim + "worst" + delim + "average"
                     + delim + percentileHit.generateCSVHeader(delim) + '\n';
         }
     }
